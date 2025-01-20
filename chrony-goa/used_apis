@@ -1,0 +1,10 @@
+genodelabs/api/base
+genodelabs/api/libc
+genodelabs/api/stdcxx
+genodelabs/api/posix
+genodelabs/api/gnutls/2025-03-05
+genodelabs/api/gmp
+genodelabs/api/nettle/2025-03-03
+genodelabs/api/os
+genodelabs/api/report_session
+genodelabs/api/rtc_session

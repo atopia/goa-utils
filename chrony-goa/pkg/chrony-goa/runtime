@@ -1,0 +1,38 @@
+<runtime ram="1G" caps="7000" binary="init" config="chrony.config">
+
+	<requires>
+		<nic/>
+		<timer/>
+		<rtc verbose="yes" allow_setting_rtc="yes"/>
+                <report/>
+	</requires>
+
+	<content>
+		<!-- Configuration files -->
+		<rom label="chrony.config"/>
+		<rom label="chrony.conf"/>
+                <rom label="cert_lets_encrypt.crt"/>
+
+		<!-- Components -->
+		<rom label="init"/>
+		<rom label="vfs"/>
+		<rom label="chronyd"/>
+		<rom label="system_rtc"/>
+		<rom label="report_rom"/>
+
+		<!-- Libraries -->
+		<rom label="ld.lib.so"/>
+		<rom label="libc.lib.so"/>
+		<rom label="libm.lib.so"/>
+		<rom label="lxip.lib.so"/>
+		<rom label="gmp.lib.so"/>
+		<rom label="posix.lib.so"/>
+		<rom label="gnutls.lib.so"/>
+		<rom label="nettle.lib.so"/>
+		<rom label="stdcxx.lib.so"/>
+		<rom label="vfs.lib.so"/>
+		<rom label="vfs_jitterentropy.lib.so"/>
+		<rom label="vfs_lxip.lib.so"/>
+		<rom label="vfs_pipe.lib.so"/>
+	</content>
+</runtime>
