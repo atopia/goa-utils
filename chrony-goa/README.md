@@ -29,7 +29,7 @@ sysctl net.ipv4.ip_forward=1
 iptables -F
 iptables -t nat -F
 iptables -t nat -A POSTROUTING -o $IFACE_OUT -j MASQUERADE
-iptables -A FORWARD -i tap0 -o $IFACE_OUT -j MASQUERADE -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i tap0 -o $IFACE_OUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i $IFACE_OUT -o tap0 -j ACCEPT
 
 # DHCP
