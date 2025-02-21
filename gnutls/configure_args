@@ -11,3 +11,4 @@
 --enable-static=no
 --enable-guile=no
 --host=x86_64-pc-genode
+ --with-default-trust-store-file=/etc/ssl/certs/ca-certificates.crt
