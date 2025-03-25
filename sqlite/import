@@ -1,0 +1,16 @@
+LICENSE   := PublicDomain
+VERSION   := 3490100
+DOWNLOADS := sqlite.archive
+
+# don't forget to bump the year in the url!
+URL(sqlite) := https://sqlite.org/2025/sqlite-amalgamation-$(VERSION).zip
+# manually computed after checking that
+# sha3-256sum sqlite-amalgamation-3490100.zip is
+# e7eb4cfb2d95626e782cfa748f534c74482f2c3c93f13ee828b9187ce05b2da7
+SHA(sqlite) := 6cebd1d8403fc58c30e93939b246f3e6e58d0765a5cd50546f16c00fd805d2c3
+DIR(sqlite) := src
+
+UNZIP_OPT := -j
+
+PATCHES := $(addprefix patches/, build.patch sqlite3.pc.patch)
+PATCH_OPT := -p1 -d src
