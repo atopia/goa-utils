@@ -1,0 +1,5 @@
+genodelabs/src/libc
+genodelabs/src/vfs
+genodelabs/src/posix
+genodelabs/src/sqlite/2025-03-20
+genodelabs/src/sqlite-speedtest
