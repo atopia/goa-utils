@@ -1,0 +1,123 @@
+--- src/meson.build.orig	2025-05-22 19:23:00.049041318 +0200
++++ src/meson.build	2025-05-22 19:22:54.511966099 +0200
+@@ -9,7 +9,7 @@
+ # regenerate configuration (run from builddir/)
+ # meson setup --reconfigure --wipe
+ 
+-project('pcsc-lite', 'c',
++project('pcsc-lite', 'c', 'cpp',
+   meson_version : '>=0.58.0',
+   version : '2.3.3')
+ 
+@@ -36,9 +36,6 @@ compiler = meson.get_compiler('c')
+ if compiler.has_function('getrandom', prefix : '#include <sys/random.h>')
+   conf_data.set('HAVE_GETRANDOM', true)
+ endif
+-if compiler.has_function('secure_getenv')
+-  conf_data.set('HAVE_SECURE_GETENV', true)
+-endif
+ if compiler.has_function('getopt_long')
+   conf_data.set('HAVE_GETOPT_LONG', true)
+ endif
+@@ -95,7 +92,7 @@ pcscd_src += gen_src
+ incdir = include_directories(['src', 'src/PCSC'])
+ 
+ # dependencies
+-threads_dep = dependency('threads')
++threads_dep = []
+ pcscd_dep = [threads_dep]
+ if get_option('libudev')
+   udev_dep = dependency('libudev')
+@@ -115,6 +112,7 @@ if get_option('libusb')
+ endif
+ 
+ cc = meson.get_compiler('c')
++
+ dl_deps = cc.find_library('dl', required: false)
+ 
+ pcscd_dep += dl_deps
+@@ -163,20 +161,22 @@ executable('pcscd',
+   install : true)
+ 
+ # libpcsclite_real library
++# Extended because we use only one library
+ libpcsclite_real_src = [
+   'src/debug.c',
+   'src/winscard_clnt.c',
+   'src/simclist.c',
+   'src/sys_unix.c',
+   'src/utils.c',
+-  'src/winscard_msg.c'
++  'src/g_defines.c',
++  'src/winscard_msg.c',
++  'src/init.cc'
+   ]
+ shared_library('pcsclite_real',
+   libpcsclite_real_src,
+   include_directories : incdir,
+   dependencies : threads_dep,
+   c_args: '-DLIBPCSCLITE -DSIMCLIST_NO_DUMPRESTORE',
+-  soversion : 1,
+   install : true)
+ 
+ # libpcsclite library
+@@ -186,11 +186,13 @@ libpcsclite_src = [
+   'src/libredirect.c',
+   'src/sys_unix.c'
+   ]
++# We re-define the pcsclite-Library to be the real one
+ libpcsclite = shared_library('pcsclite',
+-  libpcsclite_src,
++  libpcsclite_real_src,
+   dependencies : dl_deps,
+   include_directories : incdir,
+-  soversion : 1,
++  name_suffix : 'lib.so',
++  name_prefix : '',
+   install : true)
+ 
+ # static library
+@@ -224,12 +226,6 @@ install_data('src/spy/pcsc-spy',
+ install_data('src/spy/setup_spy.sh',
+   install_dir : 'share/doc/pcsc-lite')
+ 
+-run_command('pod2man',
+-  ['--date=2024-01-01', 'src/spy/pcsc-spy.pod', 'pcsc-spy.1'],
+-  check : true)
+-install_data('pcsc-spy.1',
+-  install_dir : join_paths(get_option('mandir'), 'man1'))
+-
+ # testpcsc program
+ executable('testpcsc',
+   sources : 'src/testpcsc.c',
+@@ -253,7 +249,7 @@ install_headers(
+    'src/PCSC/reader.h',
+    'src/PCSC/winscard.h',
+    'src/PCSC/wintypes.h'],
+-  install_dir : get_option('includedir') / 'PCSC')
++  install_dir : get_option('includedir'))
+ 
+ # data
+ if get_option('polkit')
+@@ -276,7 +272,7 @@ configure_file(output : 'config.h',
+ # generate from .in files
+ configure_file(output : 'pcsclite.h',
+   input : 'src/PCSC/pcsclite.h.in',
+-  install_dir : get_option('prefix') / get_option('includedir') / 'PCSC',
++  install_dir : get_option('prefix') / get_option('includedir'),
+   configuration : confgen_data)
+ configure_file(output : 'pcscd.h',
+   input : 'src/pcscd.h.in',
+@@ -308,9 +304,9 @@ endif
+ # pkg-config libpcsclite.pc
+ pkg = import('pkgconfig')
+ pkg.generate(
+-  libraries : '-L${libdir} -lpcsclite',
+-  libraries_private : '-pthread',
+-  subdirs : 'PCSC',
++  libraries : '-l:pcsclite.lib.so',
++  libraries_private : '',
++  install_dir : get_option('prefix'),
+   version : meson.project_version(),
+   name : 'PCSC Lite',
+   filebase : 'libpcsclite',
