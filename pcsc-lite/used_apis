@@ -1,6 +1,4 @@
 genodelabs/api/libc
-genodelabs/api/stdcxx
 genodelabs/api/posix
 genodelabs/api/libusb
 genodelabs/api/so
-genodelabs/api/base

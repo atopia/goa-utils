@@ -1,14 +1,5 @@
---- src/meson.build.orig	2025-05-22 19:23:00.049041318 +0200
-+++ src/meson.build	2025-05-22 19:22:54.511966099 +0200
-@@ -9,7 +9,7 @@
- # regenerate configuration (run from builddir/)
- # meson setup --reconfigure --wipe
- 
--project('pcsc-lite', 'c',
-+project('pcsc-lite', 'c', 'cpp',
-   meson_version : '>=0.58.0',
-   version : '2.3.3')
- 
+--- src/meson.build.orig	2025-06-02 16:39:40.348809344 +0200
++++ src/meson.build	2025-06-02 16:40:31.076927294 +0200
 @@ -36,9 +36,6 @@ compiler = meson.get_compiler('c')
  if compiler.has_function('getrandom', prefix : '#include <sys/random.h>')
    conf_data.set('HAVE_GETRANDOM', true)
@@ -19,7 +10,16 @@
  if compiler.has_function('getopt_long')
    conf_data.set('HAVE_GETOPT_LONG', true)
  endif
-@@ -95,7 +92,7 @@ pcscd_src += gen_src
+@@ -47,6 +44,8 @@ endif
+ features = []
+ if get_option('usb')
+   conf_data.set('USE_USB', true)
++  conf_data.set('PCSCLITE_STATIC_DRIVER', true)
++  conf_data.set('IFDHANDLERv3', true)
+   features += 'USB'
+ endif
+ 
+@@ -95,7 +94,7 @@ pcscd_src += gen_src
  incdir = include_directories(['src', 'src/PCSC'])
  
  # dependencies
@@ -28,15 +28,7 @@
  pcscd_dep = [threads_dep]
  if get_option('libudev')
    udev_dep = dependency('libudev')
-@@ -115,6 +112,7 @@ if get_option('libusb')
- endif
- 
- cc = meson.get_compiler('c')
-+
- dl_deps = cc.find_library('dl', required: false)
- 
- pcscd_dep += dl_deps
-@@ -163,20 +161,22 @@ executable('pcscd',
+@@ -163,12 +162,14 @@ executable('pcscd',
    install : true)
  
  # libpcsclite_real library
@@ -47,13 +39,11 @@
    'src/simclist.c',
    'src/sys_unix.c',
    'src/utils.c',
--  'src/winscard_msg.c'
 +  'src/g_defines.c',
-+  'src/winscard_msg.c',
-+  'src/init.cc'
+   'src/winscard_msg.c'
    ]
  shared_library('pcsclite_real',
-   libpcsclite_real_src,
+@@ -176,7 +177,6 @@ shared_library('pcsclite_real',
    include_directories : incdir,
    dependencies : threads_dep,
    c_args: '-DLIBPCSCLITE -DSIMCLIST_NO_DUMPRESTORE',
