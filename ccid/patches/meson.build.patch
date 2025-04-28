@@ -1,0 +1,51 @@
+--- src/meson.build.orig	2025-05-20 18:52:15.377857982 +0200
++++ src/meson.build	2025-05-20 18:52:07.745777681 +0200
+@@ -29,9 +29,6 @@ endif
+ if compiler.has_function('strlcat')
+   conf_data.set('HAVE_STRLCAT', true)
+ endif
+-if compiler.has_function('secure_getenv')
+-  conf_data.set('HAVE_SECURE_GETENV', true)
+-endif
+ if compiler.has_function('pthread_condattr_setclock')
+   conf_data.set('HAVE_PTHREAD_CONDATTR_SETCLOCK', true)
+ endif
+@@ -49,7 +46,7 @@ pcsc_dep = dependency('libpcsclite')
+ pcsc_cflags = pcsc_dep.partial_dependency(compile_args : true)
+ libusb_dep = dependency('libusb-1.0')
+ zlib_dep = dependency('zlib')
+-threads_dep = dependency('threads')
++threads_dep = []
+ 
+ r = run_command('uname', check: true)
+ pcsc_arch = r.stdout().strip()
+@@ -64,7 +61,7 @@ gen_flex = generator(find_program('flex'
+   output : '@BASENAME@.c',
+   arguments : ['-o', '@OUTPUT@', '--prefix=@BASENAME@', '@INPUT@'])
+ 
+-conf_data.set_quoted('PCSCLITE_HP_DROPDIR', pcsc_dep.get_variable('usbdropdir'))
++conf_data.set_quoted('PCSCLITE_HP_DROPDIR', '')
+ conf_data.set_quoted('BUNDLE', bundle_id)
+ 
+ # libccid
+@@ -95,8 +92,10 @@ library('ccid',
+   override_options : ['b_lundef=false'],
+   include_directories : ['src'],
+   dependencies : [libusb_dep, pcsc_cflags],
++  name_suffix : 'lib.so',
++  name_prefix : '',
+   install : true,
+-  install_dir : join_paths(pcsc_dep.get_variable('usbdropdir'), bundle_id, 'Contents', pcsc_arch))
++  install_dir : get_option('prefix'))
+ 
+ if get_option('serial')
+ # libccidtwin
+@@ -200,7 +199,7 @@ custom_target('Info.plist',
+   capture : true,
+   command : command,
+   install : true,
+-  install_dir : join_paths(pcsc_dep.get_variable('usbdropdir'), bundle_id, 'Contents'))
++  install_dir : get_option('prefix'))
+ 
+ # generate config.h
+ configure_file(output : 'config.h',
