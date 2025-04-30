@@ -1,0 +1,12 @@
+genodelabs/src/libc
+genodelabs/src/vfs
+genodelabs/src/vfs_libusb
+genodelabs/src/vfs_pipe
+genodelabs/src/posix
+genodelabs/src/pcsc-lite
+genodelabs/src/ccid/2025-04-28
+genodelabs/src/zlib
+genodelabs/src/libusb
+genodelabs/pkg/test_usb_host-pc
+genodelabs/src/init
+genodelabs/src/report_rom
