@@ -9,5 +9,6 @@ genodelabs/src/vfs_lxip
 genodelabs/src/init
 genodelabs/src/vfs_jitterentropy
 genodelabs/src/vfs_pipe
+genodelabs/src/vfs_import
 genodelabs/src/test-rsyslog/2025-05-13
 genodelabs/src/stdcxx

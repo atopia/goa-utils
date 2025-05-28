@@ -1,4 +1,4 @@
-<runtime ram="1G" caps="7000" binary="init">
+<runtime ram="128M" caps="7000" binary="init">
 	<requires>
 		<nic/>
 		<timer/>
@@ -23,7 +23,7 @@
 		</default-route>
 		<default caps="200"/>
 		<start name="vfs" caps="150">
-			<resource name="RAM" quantum="12M"/>
+			<resource name="RAM" quantum="24M"/>
 			<provides><service name="File_system"/></provides>
 			<config>
 				<vfs>
@@ -40,9 +40,9 @@
 					<dir name="pipe"> <pipe/> </dir>
 					<dir name="test_imfile">
 						<ram/>
-						<!-- <file name="infile" size="14"> -->
-						<!-- 	Hello rsyslog -->
-						<!-- </file> -->
+						<import>
+							<inline name="infile">Hello rsyslog</inline>
+						</import>
 					</dir>
 					<dir name="var">
 						<dir name="spool">
@@ -56,7 +56,7 @@
 								</dir>
 						</dir>
 					</dir>
-            				<dir name="etc">
+					<dir name="etc">
 						<inline name="rsyslog.conf">
 # Minimal config
 
@@ -80,7 +80,7 @@ global(workDirectory="/test_imfile")
 				<default-policy root="/" writeable="yes"/>
 			</config>
 		</start>
-		<start name="test-rsyslog" caps="500" ram="2M">
+		<start name="test-rsyslog" caps="500" ram="4M">
 			<binary name="test-rsyslog"/>
 			<config verbose="yes">
 				<arg value="test-rsyslog"/>
@@ -96,16 +96,23 @@ global(workDirectory="/test_imfile")
 				<any-service> <parent/> </any-service>
 			</route>
 		</start>
-		<start name="rsyslod" caps="520" ram="128M">
+		<start name="rsyslogd" caps="520" ram="64M">
 			<binary name="rsyslogd"/>
 			<config ld_verbose="true" verbose="yes">
 				<arg value="rsyslogd"/>
-				<arg value="-d"/>
+				<!--<arg value="-d"/>-->
 				<arg value="-n"/>
 				<arg value="-i"/>
 				<arg value="NONE"/>
 				<libc stdout="/dev/log" stderr="/dev/log" rtc="/dev/rtc" socket="/socket" pipe="/pipe" rng="/dev/random" />
 				<vfs>
+					<dir name="dev">
+						<rtc/>
+						<log/>
+						<null/>
+						<jitterentropy name="random"/>
+						<jitterentropy name="urandom"/>
+					</dir>
 					<fs />
 				</vfs>
 			</config>
@@ -138,10 +145,12 @@ global(workDirectory="/test_imfile")
 		<rom label="imfile.so"/>
 		<rom label="lmnetstrms.so"/>
 		<rom label="lmtcpclt.so"/>
+		<rom label="lmnsd_ptcp.so"/>
 		<rom label="vfs_lxip.lib.so"/>
 		<rom label="lxip.lib.so"/>
 		<rom label="vfs_jitterentropy.lib.so"/>
 		<rom label="vfs_pipe.lib.so"/>
+		<rom label="vfs_import.lib.so"/>
 		<rom label="stdcxx.lib.so"/>
 	</content>
 </runtime>
