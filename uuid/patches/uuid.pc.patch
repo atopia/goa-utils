@@ -1,0 +1,7 @@
+--- /dev/null	2025-04-08 17:50:30.773375666 +0200
++++ src/uuid.pc	2025-04-08 19:49:08.486501783 +0200
+@@ -0,0 +1,4 @@
++Name: uuid
++Description: Universally unique id library
++Version: 2.41.0
++Libs: -l:uuid.lib.so

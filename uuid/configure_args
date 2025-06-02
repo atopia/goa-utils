@@ -1,0 +1,11 @@
+--host=x86_64-pc-genode
+--enable-shared
+--enable-static=no
+--disable-all-programs
+--disable-bash-completion
+--without-ncurses
+--without-ncursesw
+--disable-nls
+--disable-uuidgen
+--enable-libuuid
+ac_cv_func_reallocarray=yes

@@ -1,0 +1,10 @@
+LICENSE   := GPLv2
+VERSION   := 2.41
+DOWNLOADS := util-linux.archive
+
+URL(util-linux) := https://www.kernel.org/pub/linux/utils/util-linux/v$(VERSION)/util-linux-$(VERSION).tar.xz
+SHA(util-linux) := 81ee93b3cfdfeb7d7c4090cedeba1d7bbce9141fd0b501b686b3fe475ddca4c6
+DIR(util-linux) := src/
+
+PATCHES := $(addprefix patches/, configure.patch uuid.pc.patch)
+#PATCH_OPT := -p1 -d src

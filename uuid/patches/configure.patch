@@ -1,0 +1,90 @@
+--- src/configure.orig	2025-04-08 19:33:44.756671807 +0200
++++ src/configure	2025-04-08 19:33:35.702036124 +0200
+@@ -12148,6 +12148,9 @@ tpf*)
+ os2*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
++genode*)
++  lt_cv_deplibs_check_method=pass_all
++  ;;
+ esac
+  ;;
+ esac
+@@ -16021,6 +16024,11 @@ _LT_EOF
+       hardcode_shlibpath_var=no
+       ;;
+ 
++    genode*)
++      archive_cmds='$CC $libobjs $deplibs '$LDLIBS_SHARED' -o $lib'
++      archive_expsym_cmds=''
++      ;;
++
+     *)
+       if $LD --help 2>&1 | $GREP ': supported targets:.* elf' > /dev/null; then
+ 	archive_cmds='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags $wl-soname $wl$soname -o $lib'
+@@ -16475,6 +16483,11 @@ fi
+       hardcode_shlibpath_var=no
+       ;;
+ 
++    genode*)
++      archive_cmds='$CC $libobjs $deplibs '$LDLIBS_SHARED' -o $lib'
++      archive_expsym_cmds=''
++      ;;
++
+     hpux9*)
+       if test yes = "$GCC"; then
+ 	archive_cmds='$RM $output_objdir/$soname~$CC -shared $pic_flag $wl+b $wl$install_libdir -o $output_objdir/$soname $libobjs $deplibs $compiler_flags~test "x$output_objdir/$soname" = "x$lib" || mv $output_objdir/$soname $lib'
+@@ -17614,6 +17627,12 @@ hpux9* | hpux10* | hpux11*)
+     sys_lib_search_path_spec="/usr/lib/pa20_64 /usr/ccs/lib/pa20_64"
+     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
+     ;;
++  genode*)
++    dynamic_linker="Genode ld.lib.so"
++    shrext_cmds=.lib.so
++    libname_spec='$name'
++    library_names_spec='$libname$shared_ext'
++    ;;
+   *)
+     shrext_cmds='.sl'
+     dynamic_linker="$host_os dld.sl"
+@@ -17974,6 +17993,13 @@ uts4*)
+   shlibpath_var=LD_LIBRARY_PATH
+   ;;
+ 
++genode*)
++  dynamic_linker="Genode ld.lib.so"
++  shrext_cmds=.lib.so
++  libname_spec='$name'
++  library_names_spec='$libname$shared_ext'
++  ;;
++
+ *)
+   dynamic_linker=no
+   ;;
+@@ -20323,6 +20349,12 @@ fi
+         ld_shlibs_CXX=no
+         ;;
+ 
++      genode*)
++        archive_cmds_CXX='$CC $libobjs $deplibs '$LDLIBS_SHARED' -o $lib'
++        archive_expsym_cmds_CXX=''
++        ld_shlibs_CXX=yes
++        ;;
++
+       *)
+         # FIXME: insert proper C++ library support
+         ld_shlibs_CXX=no
+@@ -22032,6 +22064,13 @@ uts4*)
+   shlibpath_var=LD_LIBRARY_PATH
+   ;;
+ 
++genode*)
++  dynamic_linker="Genode ld.lib.so"
++  shrext_cmds=.lib.so
++  libname_spec='$name'
++  library_names_spec='$libname$shared_ext'
++  ;;
++
+ *)
+   dynamic_linker=no
+   ;;
